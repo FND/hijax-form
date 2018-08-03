@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>hijax-form Test Suite</title>
+	<link rel="stylesheet" href="../node_modules/qunit/qunit/qunit.css">
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture">
+		<hijax-form>
+			<form action="/dummy" method="post">
+				<input type="hidden" name="id" value="abc123">
+				<input type="text" name="title">
+
+				<button>submit</button>
+			</form>
+		</hijax-form>
+	</div>
+
+	<script src="../dist/bundle.js" async></script>
+
+	<script src="../node_modules/qunit/qunit/qunit.js" defer></script>
+	<script type="module" src="test_form.js"></script>
+</body>
+
+</html>
