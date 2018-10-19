@@ -53,6 +53,15 @@ Caveats
   only after serialization has occurred, allowing the browser to fall back to
   regular (non-AJAX) form submission.
 
+* named buttons (i.e. `<button name="…" …>`) are supported by injecting a
+  temporary substitute field (i.e. `<input type="hidden" name="…" …>`) - thus:
+    * `submit` event handlers' form processing, i.e. invocation of the
+      `#serialize` or `#submit` methods, must occur synchronously
+    * if no `submit` event handler is registered, i.e. the browser's default
+      handling is not suppressed, the temporary substitute field will result
+      in the respective button's parameter being duplicated when the browser
+      submits the form
+
 
 Dependencies
 ------------

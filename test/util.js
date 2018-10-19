@@ -24,3 +24,11 @@ export function test(name, callback) {
 		return callback(t, this.fixtures());
 	});
 }
+
+export function wait(delay) {
+	return new Promise(resolve => {
+		setTimeout(() => {
+			resolve();
+		}, delay);
+	});
+}
