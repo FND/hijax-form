@@ -16,7 +16,7 @@
 	"scripts": {
 		"start": "npm run compile -- --watch",
 		"test": "npm run lint && echo && echo 'NB: tests reside in `test/index.html`'",
-		"lint": "eslint --cache *.js src test && echo ✓",
+		"lint": "eslint --cache *.js src test sample && echo ✓",
 		"compile": "faucet --compact"
 	},
 	"dependencies": {

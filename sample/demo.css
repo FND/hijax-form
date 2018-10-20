@@ -1,0 +1,33 @@
+body {
+	max-width: 40em;
+	margin: 1em auto;
+	font-family: sans-serif;
+}
+
+h1 {
+	margin: 0 0 0.5em;
+}
+
+p {
+	margin: 0.5em 0 0;
+	font-style: italic;
+}
+
+pre {
+	margin: 0.5em;
+}
+
+form {
+	float: left;
+	border: 1px solid #AAA;
+	border-radius: 3px;
+	padding: 0.5em;
+	transition-property: background-color, opacity;
+	transition-timing-function: ease-in-out;
+	transition-duration: 0.3s;
+}
+
+form[aria-busy] {
+	background-color: #AAA;
+	opacity: 0.5;
+}
