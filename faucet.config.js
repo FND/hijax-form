@@ -7,7 +7,7 @@ let bundle = {
 
 if(process.env.HIJAX_DIST) {
 	Object.assign(bundle, {
-		target: "./dist/hijax-form.js",
+		target: "./hijax-form.js",
 		esnext: true
 	});
 }

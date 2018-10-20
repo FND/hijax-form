@@ -21,13 +21,14 @@
 		</form>
 	</hijax-form>
 
+	<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Object.assign,Promise,Element.prototype.closest"></script>
 	<script>
 if(!window.customElements) { // load polyfill
 	document.write('<script src="//cdnjs.cloudflare.com/ajax/libs/document-register-element/1.11.1/document-register-element.js"><\/script>');
 }
 	</script>
 	<script src="demo.js" async></script>
-	<script src="../dist/bundle.js" async></script>
+	<script src="hijax-form.js" async></script>
 </body>
 
 </html>
