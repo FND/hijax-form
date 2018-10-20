@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import { submit, serializeForm } from "./util";
+import { submitForm, serializeForm } from "./util";
 import { prependChild, removeNode } from "uitil/dom";
 
 export default class HijaxForm extends HTMLElement {
@@ -44,10 +44,8 @@ export default class HijaxForm extends HTMLElement {
 		this._tmpField = field;
 	}
 
-	submit({ headers, strict }) {
-		// XXX: getters result in redundant DOM queries
-		return submit(this.method, this.uri, this.serialize(),
-				{ headers, cors: this.cors, strict });
+	submit({ headers, strict } = {}) {
+		return submitForm(this.form, { headers, cors: this.cors, strict });
 	}
 
 	serialize() {
@@ -56,15 +54,6 @@ export default class HijaxForm extends HTMLElement {
 
 	get cors() {
 		return this.hasAttribute("cors");
-	}
-
-	get uri() {
-		return this.form.getAttribute("action");
-	}
-
-	get method() {
-		let method = this.form.getAttribute("method");
-		return method ? method.toUpperCase() : "GET";
 	}
 
 	get form() {

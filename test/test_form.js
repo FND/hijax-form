@@ -11,13 +11,7 @@ test("DOM API", (t, fixtures) => {
 	return customElements.whenDefined(TAG).
 		then(() => {
 			t.strictEqual(el.form.tagName, "FORM");
-			t.strictEqual(el.method, "POST");
-			t.strictEqual(el.uri, "/dummy");
 			t.strictEqual(el.cors, false);
-			t.strictEqual(typeof el.submit, "function");
-
-			el.form.removeAttribute("method");
-			t.strictEqual(el.method, "GET");
 
 			el.setAttribute("cors", "");
 			t.strictEqual(el.cors, true);
@@ -36,5 +30,48 @@ test("form serialization", (t, fixtures) => {
 			let field = html2dom('<input type="file" name="document">')[0];
 			el.form.appendChild(field);
 			t.throws(() => el.serialize(), /unsupported/);
+		});
+});
+
+test("AJAX submission", (t, fixtures) => {
+	let el = fixtures.querySelector(TAG);
+	// hijack `fetch` to track HTTP requests
+	let requests = [];
+	let { fetch } = window;
+	window.fetch = (uri, options) => {
+		requests.push(Object.assign({}, options, { uri }));
+	};
+	let restore = () => {
+		window.fetch = fetch;
+	};
+
+	return customElements.whenDefined(TAG).
+		then(() => el.submit()).
+		then(() => {
+			t.deepEqual(requests, [{
+				method: "POST",
+				uri: "/dummy",
+				headers: { "Content-Type": "application/x-www-form-urlencoded" },
+				body: "id=abc123&title=",
+				credentials: "same-origin"
+			}]);
+
+			el.setAttribute("cors", "");
+			el.form.setAttribute("method", "get");
+			return el.submit();
+		}).
+		then(() => {
+			t.strictEqual(requests.length, 2);
+			t.deepEqual(requests[1], {
+				method: "GET",
+				uri: "/dummy?id=abc123&title=",
+				credentials: "include"
+			});
+
+			restore();
+		}).
+		catch(err => {
+			restore();
+			throw err;
 		});
 });

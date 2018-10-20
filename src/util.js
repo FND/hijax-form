@@ -2,15 +2,12 @@
 import { find } from "uitil/dom";
 import httpRequest from "uitil/dom/http";
 
-// XXX: duplicates `HijaxForm#submit` and corresponding getters
-export function submitForm(form, options) {
+export function submitForm(form, { headers, cors, strict } = {}) {
 	let method = form.getAttribute("method");
 	method = method ? method.toUpperCase() : "GET";
 	let uri = form.getAttribute("action");
-	return submit(method, uri, serializeForm(form), options);
-}
+	let payload = serializeForm(form);
 
-export function submit(method, uri, payload, { headers, cors, strict } = {}) {
 	if(method === "GET") {
 		if(uri.indexOf("?") !== -1) {
 			throw new Error("query strings are invalid within `GET` forms' " +
