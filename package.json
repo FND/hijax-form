@@ -17,7 +17,7 @@
 		"start": "npm run compile -- --watch",
 		"test": "npm run lint && echo && echo 'NB: tests reside in `test/index.html`'",
 		"lint": "eslint --cache *.js src test sample && echo ✓",
-		"dist": "faucet --config faucet.config.dist.js --compact",
+		"dist": "HIJAX_DIST=1 npm run compile",
 		"compile": "faucet --compact"
 	},
 	"dependencies": {
