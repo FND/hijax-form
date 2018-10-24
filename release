@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -eu
+
+. ./node_modules/release-util-fnd/lib.sh
+
+pre_release_checks
+npm test
+echo
+read -n1 -p "have you checked the test suite? enter 'y' to confirm: " confirmation
+echo
+if [ "$confirmation" != "y" ]; then
+	echo "aborting"
+	exit 1
+fi
+
+target_dir=`create_package`
+# simplify import paths
+(cd "$target_dir"; mv src/* ./; rm -r src)
+# include ES5 bundle
+npm run dist
+mv dist/hijax-form.js "$target_dir"
+
+publish_package
