@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import { html2dom, group, test } from "./util.js";
+import { html2dom, group, test, wait } from "./util.js";
 
 let TAG = "hijax-form";
 
@@ -40,6 +40,7 @@ test("AJAX submission", (t, fixtures) => {
 	let { fetch } = window;
 	window.fetch = (uri, options) => {
 		requests.push(Object.assign({}, options, { uri }));
+		return wait(1);
 	};
 	let restore = () => {
 		window.fetch = fetch;

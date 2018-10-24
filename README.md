@@ -42,6 +42,9 @@ form.addEventListener("submit", function(ev) {
 });
 ```
 
+While AJAX submission is in progress, an `aria-busy="true"` attribute will be
+added to `<hijax-form>`.
+
 
 Caveats
 -------

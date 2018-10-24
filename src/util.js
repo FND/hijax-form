@@ -19,7 +19,20 @@ export function submitForm(form, { headers, cors, strict } = {}) {
 		headers["Content-Type"] = "application/x-www-form-urlencoded";
 		var body = payload; // eslint-disable-line no-var
 	}
-	return httpRequest(method, uri, headers, body, { cors, strict });
+
+	form.setAttribute("aria-busy", "true");
+	let reset = () => {
+		form.removeAttribute("aria-busy");
+	};
+	return httpRequest(method, uri, headers, body, { cors, strict }).
+		then(res => {
+			reset();
+			return res;
+		}).
+		catch(err => {
+			reset();
+			throw err;
+		});
 }
 
 // stringify form data as `application/x-www-form-urlencoded`

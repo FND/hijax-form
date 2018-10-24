@@ -21,11 +21,6 @@ form.addEventListener("submit", function(ev) {
 });
 
 function togglePending(form, state) {
-	if(state) {
-		form.setAttribute("aria-busy", "");
-	} else {
-		form.removeAttribute("aria-busy");
-	}
 	form.querySelector("button").disabled = state;
 }
 
