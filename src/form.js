@@ -13,17 +13,16 @@ export default class HijaxForm extends HTMLElement {
 		form.appendChild(interceptor);
 		// TODO: `MutationObserver` to ensure `interceptor` remains in place?
 
-		this.addEventListener("submit", this._onSubmit);
+		this.addEventListener("submit", this._reset);
 		interceptor.addEventListener("click", this._onClick.bind(this));
 	}
 
-	// cleans up temporary substitute field
-	_onSubmit(ev) {
-		let field = this._tmpField;
-		if(field) {
-			removeNode(field);
-			this._tmpField = null;
-		}
+	submit({ headers, strict } = {}) {
+		return submitForm(this.form, { headers, cors: this.cors, strict });
+	}
+
+	serialize() {
+		return serializeForm(this.form);
 	}
 
 	// injects a temporary substitute field for named buttons
@@ -44,12 +43,13 @@ export default class HijaxForm extends HTMLElement {
 		this._tmpField = field;
 	}
 
-	submit({ headers, strict } = {}) {
-		return submitForm(this.form, { headers, cors: this.cors, strict });
-	}
-
-	serialize() {
-		return serializeForm(this.form);
+	// cleans up temporary substitute field
+	_reset(ev) {
+		let field = this._tmpField;
+		if(field) {
+			removeNode(field);
+			this._tmpField = null;
+		}
 	}
 
 	get cors() {
