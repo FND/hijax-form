@@ -11,7 +11,7 @@ test("auto-generated intercepting wrapper", (t, fixtures) => {
 		then(() => {
 			let { form } = el;
 			t.strictEqual(form.childNodes.length, 1);
-			t.strictEqual(form.firstChild.nodeName, "DIV");
+			t.strictEqual(form.firstChild.nodeName, "HIJAX-FORM-INTERCEPTOR");
 		});
 });
 

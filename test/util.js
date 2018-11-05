@@ -1,5 +1,7 @@
 /* global QUnit */
 
+QUnit.config.noglobals = true;
+
 export function html2dom(html) {
 	let tmp = document.createElement("div");
 	tmp.innerHTML = html;

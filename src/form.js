@@ -5,7 +5,7 @@ import { prependChild, removeNode } from "uitil/dom";
 export default class HijaxForm extends HTMLElement {
 	connectedCallback() {
 		let { form } = this;
-		let interceptor = document.createElement("div");
+		let interceptor = document.createElement("hijax-form-interceptor");
 		// TODO: move as `wrap` into uitil?
 		[].slice.call(form.childNodes).forEach(node => {
 			interceptor.appendChild(node);
