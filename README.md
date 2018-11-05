@@ -1,6 +1,9 @@
 hijax-form
 ==========
 
+[![package version](https://img.shields.io/npm/v/qunit-puppeteer-reporter.svg?style=flat)](https://www.npmjs.com/package/qunit-puppeteer-reporter)
+[![build status](https://travis-ci.org/FND/hijax-form.svg?branch=master)](https://travis-ci.org/FND/hijax-form)
+
 `<hijax-form>` is a
 [custom element](https://html.spec.whatwg.org/multipage/custom-elements.html)
 for AJAX form submission, relying on established HTML form semantics and leaving

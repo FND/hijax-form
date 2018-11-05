@@ -6,13 +6,6 @@ set -eu
 
 pre_release_checks
 npm test
-echo
-read -n1 -p "have you checked the test suite? enter 'y' to confirm: " confirmation
-echo
-if [ "$confirmation" != "y" ]; then
-	echo "aborting"
-	exit 1
-fi
 
 target_dir=`create_package`
 # simplify import paths

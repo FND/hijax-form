@@ -15,7 +15,8 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "npm run compile -- --watch",
-		"test": "npm run lint && echo && echo 'NB: tests reside in `test/index.html`'",
+		"test": "npm run lint && npm run test:unit",
+		"test:unit": "qunit-reporter http://localhost:8000/test/index.html",
 		"lint": "eslint --cache *.js src test sample && echo ✓",
 		"dist": "HIJAX_DIST=1 npm run compile",
 		"compile": "faucet --compact"
@@ -26,7 +27,8 @@
 	"devDependencies": {
 		"eslint-config-fnd": "^1.6.0",
 		"faucet-pipeline-esnext": "~1.0.0",
-		"qunit": "^2.7.1",
+		"qunit": "^2.8.0",
+		"qunit-puppeteer-reporter": "^2.0.3",
 		"release-util-fnd": "^1.1.1"
 	}
 }
