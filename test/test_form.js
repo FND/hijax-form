@@ -2,8 +2,19 @@
 import { html2dom, group, test, wait } from "./util.js";
 
 let TAG = "hijax-form";
+let REQUESTS, RESTORE;
 
-group("hijax-form");
+group("hijax-form", {
+	before: () => {
+		// hijack `fetch` to track HTTP requests
+		REQUESTS = [];
+		RESTORE = hijack("fetch", window, (uri, options) => {
+			REQUESTS.push(Object.assign({ uri }, options));
+			return wait(1);
+		});
+	},
+	after: () => void RESTORE()
+});
 
 // XXX: simplistic and unhelpful; test actual functionality instead
 test("DOM API", (t, fixtures) => {
@@ -33,23 +44,12 @@ test("form serialization", (t, fixtures) => {
 		});
 });
 
-test("AJAX submission", (t, fixtures) => {
+test("AJAX submission", function(t, fixtures) {
 	let el = fixtures.querySelector(TAG);
-	// hijack `fetch` to track HTTP requests
-	let requests = [];
-	let { fetch } = window;
-	window.fetch = (uri, options) => {
-		requests.push(Object.assign({}, options, { uri }));
-		return wait(1);
-	};
-	let restore = () => {
-		window.fetch = fetch;
-	};
-
 	return customElements.whenDefined(TAG).
 		then(() => el.submit()).
 		then(() => {
-			t.deepEqual(requests, [{
+			t.deepEqual(REQUESTS, [{
 				method: "POST",
 				uri: "/dummy",
 				headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -62,17 +62,19 @@ test("AJAX submission", (t, fixtures) => {
 			return el.submit();
 		}).
 		then(() => {
-			t.strictEqual(requests.length, 2);
-			t.deepEqual(requests[1], {
+			t.strictEqual(REQUESTS.length, 2);
+			t.deepEqual(REQUESTS[1], {
 				method: "GET",
 				uri: "/dummy?id=abc123&title=",
 				credentials: "include"
 			});
-
-			restore();
-		}).
-		catch(err => {
-			restore();
-			throw err;
 		});
 });
+
+function hijack(prop, obj, value) {
+	let original = obj[prop];
+	obj[prop] = value;
+	return () => {
+		obj[prop] = original;
+	};
+}

@@ -8,22 +8,24 @@ export function html2dom(html) {
 	return Array.prototype.slice.call(tmp.childNodes);
 }
 
+// wrapper for `QUnit.module` to inject fixtures into tests
 export function group(name, options = {}) {
 	let { before } = options;
 	options.before = function() {
 		// NB: `#qunit-fixture` is re-created for each test, thus the thunk here
 		this.fixtures = () => document.getElementById("qunit-fixture");
 
-		before && before.call(this);
+		return before && before.call(this);
 	};
 
 	QUnit.module(name, options);
 }
 
+// wrapper for `QUnit.test` to inject fixtures
 // NB: relies on `before` hook injected by `group`
 export function test(name, callback) {
 	return QUnit.test(name, function(t) {
-		return callback(t, this.fixtures());
+		return callback.call(this, t, this.fixtures());
 	});
 }
 
