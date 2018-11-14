@@ -12,42 +12,27 @@ group("hijax-form", {
 			REQUESTS.push(Object.assign({ uri }, options));
 			return wait(1);
 		});
+
+		return customElements.whenDefined(TAG);
 	},
 	after: () => void RESTORE()
 });
 
-// XXX: simplistic and unhelpful; test actual functionality instead
-test("DOM API", (t, fixtures) => {
-	let el = fixtures.querySelector(TAG);
-	return customElements.whenDefined(TAG).
-		then(() => {
-			t.strictEqual(el.form.tagName, "FORM");
-			t.strictEqual(el.cors, false);
-
-			el.setAttribute("cors", "");
-			t.strictEqual(el.cors, true);
-		});
-});
-
 test("form serialization", (t, fixtures) => {
 	let el = fixtures.querySelector(TAG);
-	return customElements.whenDefined(TAG).
-		then(() => {
-			t.strictEqual(el.serialize(), "id=abc123&title=");
+	t.strictEqual(el.serialize(), "id=abc123&title=");
 
-			el.querySelector("input[name=title]").value = "hello world";
-			t.strictEqual(el.serialize(), "id=abc123&title=hello%20world");
+	el.querySelector("input[name=title]").value = "hello world";
+	t.strictEqual(el.serialize(), "id=abc123&title=hello%20world");
 
-			let field = html2dom('<input type="file" name="document">')[0];
-			el.form.appendChild(field);
-			t.throws(() => el.serialize(), /unsupported/);
-		});
+	let field = html2dom('<input type="file" name="document">')[0];
+	el.form.appendChild(field);
+	t.throws(() => el.serialize(), /unsupported/);
 });
 
 test("AJAX submission", function(t, fixtures) {
 	let el = fixtures.querySelector(TAG);
-	return customElements.whenDefined(TAG).
-		then(() => el.submit()).
+	return el.submit().
 		then(() => {
 			t.deepEqual(REQUESTS, [{
 				method: "POST",

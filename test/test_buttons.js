@@ -3,7 +3,9 @@ import { group, test, wait } from "./util.js";
 
 let TAG = "hijax-form";
 
-group("named buttons");
+group("named buttons", {
+	before: () => customElements.whenDefined(TAG)
+});
 
 test("auto-generated intercepting wrapper", (t, fixtures) => {
 	let el = fixtures.querySelector(TAG);
@@ -24,23 +26,20 @@ test("temporary substitute field", (t, fixtures) => {
 		ev.preventDefault();
 	};
 
-	return customElements.whenDefined(TAG).
-		then(() => {
-			let { form } = el;
-			t.strictEqual(el.querySelectorAll("input[type=hidden]").length, 1);
+	let { form } = el;
+	t.strictEqual(el.querySelectorAll("input[type=hidden]").length, 1);
 
-			form.addEventListener("submit", onSubmit);
+	form.addEventListener("submit", onSubmit);
 
-			form.querySelector("button:not([name])").click();
-			t.deepEqual(submissions, ["id=abc123&title="]);
-			t.strictEqual(el.querySelectorAll("input[type=hidden]").length, 1);
+	form.querySelector("button:not([name])").click();
+	t.deepEqual(submissions, ["id=abc123&title="]);
+	t.strictEqual(el.querySelectorAll("input[type=hidden]").length, 1);
 
-			form.querySelector("button[name]").click();
-			t.strictEqual(submissions.length, 2);
-			t.strictEqual(submissions[1], "op=rm&id=abc123&title=");
+	form.querySelector("button[name]").click();
+	t.strictEqual(submissions.length, 2);
+	t.strictEqual(submissions[1], "op=rm&id=abc123&title=");
 
-			return wait(1); // wait for temporary substitute field to be removed
-		}).
+	return wait(1). // wait for temporary substitute field to be removed
 		then(() => {
 			t.strictEqual(el.serialize(), "id=abc123&title=");
 			t.strictEqual(el.querySelectorAll("input[type=hidden]").length, 1);
