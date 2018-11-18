@@ -94,3 +94,11 @@ export function serializeForm(form) {
 		return params;
 	}, []).join("&");
 }
+
+// TODO: move into uitil?
+export function wrapChildren(parentNode, wrapperNode) {
+	[].slice.call(parentNode.childNodes).forEach(node => {
+		wrapperNode.appendChild(node);
+	});
+	parentNode.appendChild(wrapperNode);
+}

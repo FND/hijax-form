@@ -1,16 +1,12 @@
 /* eslint-env browser */
-import { submitForm, serializeForm } from "./util";
+import { submitForm, serializeForm, wrapChildren } from "./util";
 import { prependChild, removeNode } from "uitil/dom";
 
 export default class HijaxForm extends HTMLElement {
 	connectedCallback() {
 		let { form } = this;
 		let interceptor = document.createElement("hijax-form-interceptor");
-		// TODO: move as `wrap` into uitil?
-		[].slice.call(form.childNodes).forEach(node => {
-			interceptor.appendChild(node);
-		});
-		form.appendChild(interceptor);
+		wrapChildren(form, interceptor);
 		// TODO: `MutationObserver` to ensure `interceptor` remains in place?
 
 		this.addEventListener("submit", this._reset);
