@@ -1,0 +1,24 @@
+name: tests
+on:
+- push
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version:
+                - 12.x
+                - 14.x
+        steps:
+        - uses: actions/checkout@v1
+        - uses: actions/setup-node@v1
+          with:
+              node-version: ${{ matrix.node-version }}
+        - run: |
+            npx servedir &
+            npm install
+            npm install puppeteer
+            npm run compile
+            npm test
+          env:
+              CI: true

@@ -2,7 +2,7 @@ hijax-form
 ==========
 
 [![package version](https://img.shields.io/npm/v/hijax-form.svg?style=flat)](https://www.npmjs.com/package/hijax-form)
-[![build status](https://travis-ci.org/FND/hijax-form.svg?branch=master)](https://travis-ci.org/FND/hijax-form)
+[![build status](https://github.com/FND/hijax-form/workflows/tests/badge.svg?branch=master)](https://github,.com/FND/hijax-form/actions)
 
 `<hijax-form>` is a
 [custom element](https://html.spec.whatwg.org/multipage/custom-elements.html)
