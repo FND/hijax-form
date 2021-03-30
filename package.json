@@ -22,13 +22,13 @@
 		"compile": "faucet --compact"
 	},
 	"dependencies": {
-		"uitil": "^2.4.2"
+		"uitil": "^2.8.0"
 	},
 	"devDependencies": {
-		"eslint-config-fnd": "^1.6.0",
-		"faucet-pipeline-esnext": "~1.1.0",
-		"qunit": "^2.8.0",
-		"qunit-puppeteer-reporter": "^2.0.3",
-		"release-util-fnd": "^1.1.1"
+		"eslint-config-fnd": "^1.10.0",
+		"faucet-pipeline-esnext": "~2.1.7",
+		"qunit": "^2.14.1",
+		"qunit-puppeteer-reporter": "^2.0.4",
+		"release-util-fnd": "^2.0.1"
 	}
 }

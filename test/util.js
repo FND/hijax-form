@@ -1,11 +1,11 @@
+/* eslint-env browser */
 /* global QUnit */
 
 QUnit.config.noglobals = true;
 
 export function html2dom(html) {
-	let tmp = document.createElement("div");
-	tmp.innerHTML = html;
-	return Array.prototype.slice.call(tmp.childNodes);
+	let parser = new DOMParser();
+	return parser.parseFromString(html, "text/html").body;
 }
 
 // wrapper for `QUnit.module` to inject fixtures into tests

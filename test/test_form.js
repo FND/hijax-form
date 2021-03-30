@@ -25,7 +25,7 @@ test("form serialization", (t, fixtures) => {
 	el.querySelector("input[name=title]").value = "hello world";
 	t.strictEqual(el.serialize(), "id=abc123&title=hello%20world");
 
-	let field = html2dom('<input type="file" name="document">')[0];
+	let field = html2dom('<input type="file" name="document">').childNodes[0];
 	el.form.appendChild(field);
 	t.throws(() => el.serialize(), /unsupported/);
 });
