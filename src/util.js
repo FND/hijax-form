@@ -6,18 +6,20 @@ export function submitForm(form, { headers, cors, strict } = {}) {
 	let method = form.getAttribute("method");
 	method = method ? method.toUpperCase() : "GET";
 	let uri = form.getAttribute("action");
-	let payload = serializeForm(form);
+	let body;
 
 	if(method === "GET") {
 		if(uri.indexOf("?") !== -1) {
 			throw new Error("query strings are invalid within `GET` forms' " +
 					"`action` URI; please use hidden fields instead");
 		}
-		uri = [uri, payload].join("?");
+		uri = [uri, serializeForm(form, new StringParams())].join("?");
+	} else if(form.getAttribute("enctype") === "multipart/form-data") {
+		body = serializeForm(form, new FormDataParams());
 	} else {
 		headers = headers || {};
 		headers["Content-Type"] = "application/x-www-form-urlencoded";
-		var body = payload; // eslint-disable-line no-var
+		body = serializeForm(form, new StringParams());
 	}
 
 	form.setAttribute("aria-busy", "true");
@@ -35,11 +37,11 @@ export function submitForm(form, { headers, cors, strict } = {}) {
 		});
 }
 
-// stringify form data as `application/x-www-form-urlencoded`
-// required due to insufficient browser support for `FormData`
+// Collects form parameters using the `params` accumulator which is passed
+// into the function. The accumulator then serializes the data either
+// as a `FormData` object or as an `application/x-www-form-urlencoded` string
 // NB: only supports a subset of form fields, notably excluding named buttons
-//     and file inputs
-export function serializeForm(form) {
+export function serializeForm(form, params = new StringParams()) {
 	let selector = ["input", "textarea", "select"].
 		map(tag => `${tag}[name]:not(:disabled)`).join(", ");
 	let radios = {};
@@ -58,7 +60,8 @@ export function serializeForm(form) {
 		case "input":
 			switch(node.type) {
 			case "file":
-				throw new Error("`input[type=file]` fields are unsupported");
+				value = node.files[0];
+				break;
 			case "checkbox":
 				if(node.checked) {
 					value = node.value;
@@ -87,12 +90,45 @@ export function serializeForm(form) {
 				values = [values];
 			}
 			values.forEach(value => {
-				let param = [name, value].map(encodeURIComponent).join("=");
-				params.push(param);
+				params.setParameter(name, value);
 			});
 		}
 		return params;
-	}, []).join("&");
+	}, params).serialize();
+}
+
+class FormDataParams {
+	constructor() {
+		this.formData = new FormData();
+	}
+
+	setParameter(name, value) {
+		this.formData.append(name, value);
+	}
+
+	serialize() {
+		return this.formData;
+	}
+}
+
+class StringParams {
+	constructor() {
+		this.params = [];
+	}
+
+	setParameter(name, value) {
+		if(typeof (value) !== "string") {
+			throw new Error("`input[type=file]` fields are only supported for " +
+				"forms with [enctype=multipart/form-data]");
+		}
+
+		let param = [name, value].map(encodeURIComponent).join("=");
+		this.params.push(param);
+	}
+
+	serialize() {
+		return this.params.join("&");
+	}
 }
 
 // TODO: move into uitil?
